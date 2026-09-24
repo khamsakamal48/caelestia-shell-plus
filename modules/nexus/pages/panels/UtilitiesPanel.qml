@@ -168,7 +168,7 @@ PageBase {
 
         ToggleRow {
             text: Tr.tr("Screenshot")
-            subtext: Tr.tr("Capture and annotate with RyoShot")
+            subtext: Tr.tr("Capture a region and annotate it")
             disabled: !Config.utilities.cards.quickToggles
             checked: root.isToggleOn("screenshot")
             onToggled: root.setToggleOn("screenshot", checked)

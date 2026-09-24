@@ -6,7 +6,8 @@
 #
 # The shell is built as a pacman package that replaces caelestia-shell. Super+V
 # is rebound from the dots' fuzzel picker to the clipboard panel inside a marked
-# block in the dots' update-safe ~/.config/caelestia/hypr-user.lua.
+# block in the dots' update-safe ~/.config/caelestia/hypr-user.lua, and Print
+# opens the full-screen shot in Satty for annotation.
 set -euo pipefail
 
 here=$(cd "$(dirname "$(readlink -f "$0")")" && pwd)
@@ -56,6 +57,8 @@ install_all() {
 $begin
 hl.unbind("SUPER + V")
 hl.bind("SUPER + V", hl.dsp.global("caelestia:clipboard"))
+hl.unbind("Print")
+hl.bind("Print", hl.dsp.exec_cmd("grim - | caelestia-annotate -"))
 $end
 EOF
 

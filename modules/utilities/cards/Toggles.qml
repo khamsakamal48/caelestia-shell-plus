@@ -169,8 +169,8 @@ StyledRect {
                         icon: "screenshot_region"
                         onClicked: {
                             root.screenState.utilities = false;
-                            // RyoShot: Ryoku's capture + annotate editor, same as Print / Super+Shift+S
-                            Quickshell.execDetached(["sh", "-c", "flock -n -o /tmp/ryoshot.lock qs -c ryoshot"]);
+                            // Region picker -> Satty. Not freeze mode: that would capture this closing drawer
+                            Quickshell.execDetached(["qs", "-c", "caelestia", "ipc", "call", "picker", "open"]);
                         }
                     }
                 }

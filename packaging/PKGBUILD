@@ -44,9 +44,12 @@ depends=(
     'fish'
     'bash'
 
-    # caelestia-shell-plus: night light and colour picker
+    # caelestia-shell-plus: night light, colour picker, screenshot annotation
     'hyprsunset'
     'hyprpicker'
+    'satty'
+    'grim'
+    'wl-clipboard'
 )
 optdepends=(
     'asdbctl: controlling the brightness of Apple Studio Displays'
@@ -73,5 +76,6 @@ build() {
 
 package() {
     DESTDIR="$pkgdir" cmake --install build
+    install -Dm755 "$_src/packaging/caelestia-annotate" "$pkgdir/usr/bin/caelestia-annotate"
     install -Dm644 "$_src/LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }

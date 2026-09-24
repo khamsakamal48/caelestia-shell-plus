@@ -65,11 +65,14 @@ StyledRect {
         QuickToggleRow {
             visible: root.needExtraRow
             model: root.needExtraRow ? root.quickToggles.slice(root.splitIndex) : []
+            // Pad an odd split so both rows keep the same button width
+            spacers: root.quickToggles.length % 2
         }
     }
 
     component QuickToggleRow: ButtonRow {
         property alias model: repeater.model
+        property int spacers
 
         Layout.fillWidth: true
         spacing: Tokens.spacing.small
@@ -98,6 +101,14 @@ StyledRect {
                             if (adapter)
                                 adapter.enabled = !adapter.enabled;
                         }
+                    }
+                }
+                DelegateChoice {
+                    roleValue: "airplane"
+                    delegate: Toggle {
+                        icon: "flight"
+                        checked: Airplane.enabled
+                        onClicked: Airplane.toggle()
                     }
                 }
                 DelegateChoice {
@@ -158,7 +169,8 @@ StyledRect {
                         icon: "screenshot_region"
                         onClicked: {
                             root.screenState.utilities = false;
-                            Quickshell.execDetached(["qs", "-c", "caelestia", "ipc", "call", "picker", "open"]);
+                            // RyoShot: Ryoku's capture + annotate editor, same as Print / Super+Shift+S
+                            Quickshell.execDetached(["sh", "-c", "flock -n -o /tmp/ryoshot.lock qs -c ryoshot"]);
                         }
                     }
                 }
@@ -201,6 +213,16 @@ StyledRect {
                 }
             }
         }
+
+        Repeater {
+            model: parent.spacers
+
+            Item {
+                property bool fillWidth: true
+
+                implicitWidth: 0
+            }
+        }
     }
 
     // A one-shot button (opens something) rather than an on/off toggle.
@@ -214,6 +236,8 @@ StyledRect {
         fillWidth: true
         isToggle: true
         isRound: true
+        // Stay a pill when checked; colour alone marks the state
+        checkedRadius: (height || implicitHeight) / 2 * Math.min(1, Tokens.rounding.scale)
         shapeMorph: true
     }
 }

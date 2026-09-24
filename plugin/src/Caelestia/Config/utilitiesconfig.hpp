@@ -66,18 +66,20 @@ class UtilitiesConfig : public settings::ObjectNode {
     CONFIG_GLOBAL_SUBOBJECT(UtilitiesVpn, vpn)
     CONFIG_LIST(EntryList, quickToggles,
         DEFAULT_ARG({
+            // Row 1: connectivity and system states. Row 2: capture and tools.
             LIST_ENTRY(wifi, true),
             LIST_ENTRY(bluetooth, true),
-            LIST_ENTRY(mic, true),
-            LIST_ENTRY(settings, true),
-            LIST_ENTRY(gameMode, true),
+            LIST_ENTRY(airplane, true),
+            LIST_ENTRY(vpn, false),
             LIST_ENTRY(dnd, true),
             LIST_ENTRY(nightLight, true),
-            LIST_ENTRY(clipboard, true),
-            LIST_ENTRY(launcher, true),
+            LIST_ENTRY(gameMode, true),
+            LIST_ENTRY(mic, true),
             LIST_ENTRY(screenshot, true),
             LIST_ENTRY(colourPicker, true),
-            LIST_ENTRY(vpn, false),
+            LIST_ENTRY(clipboard, true),
+            LIST_ENTRY(launcher, true),
+            LIST_ENTRY(settings, true),
         }))
 };
 

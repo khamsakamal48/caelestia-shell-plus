@@ -103,6 +103,14 @@ PageBase {
         }
 
         ToggleRow {
+            text: Tr.tr("Airplane mode")
+            subtext: Tr.tr("Turn off all wireless radios")
+            disabled: !Config.utilities.cards.quickToggles
+            checked: root.isToggleOn("airplane")
+            onToggled: root.setToggleOn("airplane", checked)
+        }
+
+        ToggleRow {
             text: Tr.tr("Microphone")
             subtext: Tr.tr("Mute or unmute the default source")
             disabled: !Config.utilities.cards.quickToggles
@@ -160,7 +168,7 @@ PageBase {
 
         ToggleRow {
             text: Tr.tr("Screenshot")
-            subtext: Tr.tr("Capture a screen region")
+            subtext: Tr.tr("Capture and annotate with RyoShot")
             disabled: !Config.utilities.cards.quickToggles
             checked: root.isToggleOn("screenshot")
             onToggled: root.setToggleOn("screenshot", checked)

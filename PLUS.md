@@ -15,6 +15,8 @@ inspired by [Ryoku](https://github.com/ryoku-dev/ryoku):
   - **Clipboard**, **Search**, **Screenshot** and **Colour picker** buttons
 
   You can switch each one on or off in Nexus → Utilities.
+- **Bibata Modern Ice cursor** (from `bibata-cursor-theme-bin` in the AUR),
+  set in the installer's block in `~/.config/caelestia/hypr-user.lua`.
 
 To switch Hyprland tiling layouts (Dwindle / Master / Scrolling / Monocle),
 install [HyprMod](https://github.com/BlueManCZ/hyprmod) (`paru -S hyprmod`) and

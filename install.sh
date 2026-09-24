@@ -7,7 +7,8 @@
 # The shell is built as a pacman package that replaces caelestia-shell. Super+V
 # is rebound from the dots' fuzzel picker to the clipboard panel inside a marked
 # block in the dots' update-safe ~/.config/caelestia/hypr-user.lua, and Print
-# opens the full-screen shot in Satty for annotation.
+# opens the full-screen shot in Satty for annotation. The cursor is set to
+# Bibata Modern Ice in the same block.
 set -euo pipefail
 
 here=$(cd "$(dirname "$(readlink -f "$0")")" && pwd)
@@ -50,6 +51,7 @@ install_all() {
     pkg=$(ls -t "$here"/packaging/caelestia-shell-plus-*.pkg.tar.* | grep -v -- '-debug-' | head -1)
     say "installing $(basename "$pkg") (answer y to replace caelestia-shell)"
     sudo pacman -U "$pkg"
+    "$(aur_helper)" -S --needed --noconfirm bibata-cursor-theme-bin
 
     mkdir -p "$(dirname "$user_lua")"
     strip_block
@@ -59,8 +61,13 @@ hl.unbind("SUPER + V")
 hl.bind("SUPER + V", hl.dsp.global("caelestia:clipboard"))
 hl.unbind("Print")
 hl.bind("Print", hl.dsp.exec_cmd("grim - | caelestia-annotate -"))
+require("variables").cursorTheme = "Bibata-Modern-Ice"
+hl.env("XCURSOR_THEME", "Bibata-Modern-Ice")
 $end
 EOF
+
+    hyprctl setcursor Bibata-Modern-Ice 24 >/dev/null 2>&1 || true
+    gsettings set org.gnome.desktop.interface cursor-theme Bibata-Modern-Ice 2>/dev/null || true
 
     restart_shell
     say "done: press Super+V for the clipboard history"

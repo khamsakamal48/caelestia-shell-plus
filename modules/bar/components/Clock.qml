@@ -143,4 +143,15 @@ StyledRect {
             }
         }
     }
+
+    // Clicking the clock toggles the control panel.
+    MouseArea {
+        anchors.fill: parent
+        cursorShape: Qt.PointingHandCursor
+        onClicked: {
+            const screenState = ShellState.forActive();
+            if (screenState)
+                screenState.controls = !screenState.controls;
+        }
+    }
 }

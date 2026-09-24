@@ -50,6 +50,10 @@ Region {
     }
 
     R {
+        panel: root.panels.controls
+    }
+
+    R {
         panel: root.panels.osdWrapper
         x: root.win.width - width
         width: panel.width * (1 - root.panels.osd.offsetScale) + root.borderThickness + sessionRegion.width

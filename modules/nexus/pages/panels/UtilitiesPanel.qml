@@ -135,6 +135,38 @@ PageBase {
         }
 
         ToggleRow {
+            text: Tr.tr("Control panel")
+            subtext: Tr.tr("Open the control panel")
+            disabled: !Config.utilities.cards.quickToggles
+            checked: root.isToggleOn("controls")
+            onToggled: root.setToggleOn("controls", checked)
+        }
+
+        ToggleRow {
+            text: Tr.tr("Search")
+            subtext: Tr.tr("Open the launcher")
+            disabled: !Config.utilities.cards.quickToggles
+            checked: root.isToggleOn("launcher")
+            onToggled: root.setToggleOn("launcher", checked)
+        }
+
+        ToggleRow {
+            text: Tr.tr("Screenshot")
+            subtext: Tr.tr("Capture a screen region")
+            disabled: !Config.utilities.cards.quickToggles
+            checked: root.isToggleOn("screenshot")
+            onToggled: root.setToggleOn("screenshot", checked)
+        }
+
+        ToggleRow {
+            text: Tr.tr("Colour picker")
+            subtext: Tr.tr("Pick a colour from the screen")
+            disabled: !Config.utilities.cards.quickToggles
+            checked: root.isToggleOn("colourPicker")
+            onToggled: root.setToggleOn("colourPicker", checked)
+        }
+
+        ToggleRow {
             last: true
             text: Tr.tr("VPN")
             subtext: Tr.tr("Connect or disconnect the VPN")

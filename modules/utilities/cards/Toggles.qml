@@ -2,6 +2,7 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import QtQuick.Layouts
+import Quickshell
 import Quickshell.Bluetooth
 import Caelestia.Components
 import Caelestia.Config
@@ -124,6 +125,46 @@ StyledRect {
                     }
                 }
                 DelegateChoice {
+                    roleValue: "controls"
+                    delegate: Action {
+                        icon: "tune"
+                        onClicked: {
+                            root.screenState.utilities = false;
+                            root.screenState.controls = true;
+                        }
+                    }
+                }
+                DelegateChoice {
+                    roleValue: "launcher"
+                    delegate: Action {
+                        icon: "search"
+                        onClicked: {
+                            root.screenState.utilities = false;
+                            root.screenState.launcher = true;
+                        }
+                    }
+                }
+                DelegateChoice {
+                    roleValue: "screenshot"
+                    delegate: Action {
+                        icon: "screenshot_region"
+                        onClicked: {
+                            root.screenState.utilities = false;
+                            Quickshell.execDetached(["qs", "-c", "caelestia", "ipc", "call", "picker", "open"]);
+                        }
+                    }
+                }
+                DelegateChoice {
+                    roleValue: "colourPicker"
+                    delegate: Action {
+                        icon: "colorize"
+                        onClicked: {
+                            root.screenState.utilities = false;
+                            Quickshell.execDetached(["hyprpicker", "-a"]);
+                        }
+                    }
+                }
+                DelegateChoice {
                     roleValue: "gameMode"
                     delegate: Toggle {
                         icon: "gamepad"
@@ -152,6 +193,12 @@ StyledRect {
                 }
             }
         }
+    }
+
+    // A one-shot button (opens something) rather than an on/off toggle.
+    component Action: Toggle {
+        isToggle: false
+        inactiveOnColour: Colours.palette.m3onSurfaceVariant
     }
 
     component Toggle: IconButton {

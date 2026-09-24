@@ -98,13 +98,13 @@ Scope {
     // qmllint disable unresolved-type
     CustomShortcut {
         // qmllint enable unresolved-type
-        name: "controls"
-        description: "Toggle control panel"
+        name: "clipboard"
+        description: "Toggle clipboard history"
         onPressed: {
             if (root.hasFullscreen)
                 return;
             const screenState = ShellState.forActive();
-            screenState.controls = !screenState.controls;
+            screenState.clipboard = !screenState.clipboard;
         }
     }
 

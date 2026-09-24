@@ -1,11 +1,11 @@
-# caelestia-shell-plus: caelestia-shell plus Ryoku's control panel and tiling
-# layout switching. Builds this git checkout (run by ../install.sh) and stands
+# caelestia-shell-plus: caelestia-shell plus a clipboard history panel and extra
+# quick toggles. Builds this git checkout (run by ../install.sh) and stands
 # in for the AUR caelestia-shell package.
 
 pkgname='caelestia-shell-plus'
 pkgver=0
 pkgrel=1
-pkgdesc='The Caelestia desktop shell with a Ryoku-style control panel and layout switcher'
+pkgdesc='The Caelestia desktop shell with a clipboard history panel and extra quick toggles'
 arch=('x86_64' 'aarch64')
 url='https://github.com/khamsakamal48/caelestia-shell-plus'
 license=('GPL-3.0-only')

@@ -135,11 +135,19 @@ PageBase {
         }
 
         ToggleRow {
-            text: Tr.tr("Control panel")
-            subtext: Tr.tr("Open the control panel")
+            text: Tr.tr("Night light")
+            subtext: Tr.tr("Warm the screen with hyprsunset")
             disabled: !Config.utilities.cards.quickToggles
-            checked: root.isToggleOn("controls")
-            onToggled: root.setToggleOn("controls", checked)
+            checked: root.isToggleOn("nightLight")
+            onToggled: root.setToggleOn("nightLight", checked)
+        }
+
+        ToggleRow {
+            text: Tr.tr("Clipboard")
+            subtext: Tr.tr("Open the clipboard history")
+            disabled: !Config.utilities.cards.quickToggles
+            checked: root.isToggleOn("clipboard")
+            onToggled: root.setToggleOn("clipboard", checked)
         }
 
         ToggleRow {

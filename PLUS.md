@@ -1,23 +1,24 @@
 # caelestia-shell-plus
 
-[caelestia-shell](https://github.com/caelestia-dots/shell) with two additions
-from [Ryoku](https://github.com/ryoku-dev/ryoku):
+[caelestia-shell](https://github.com/caelestia-dots/shell) with a few additions
+inspired by [Ryoku](https://github.com/ryoku-dev/ryoku):
 
-- **A control panel.** It slides out from the bar on the left. Open it with
-  **Super+A**, by clicking the clock in the bar, or with
-  `caelestia shell drawers toggle controls`. It has:
-  - the clock, the date, the battery, and logout / lock / reboot / power off
-    (reboot and power off only fire after a 0.7 s hold)
-  - Connect tiles: Wi-Fi, Bluetooth, Airplane, Night light, Keep awake,
-    Do not disturb, Gaming
-  - volume, microphone and brightness sliders
-  - a calendar
-  - **Layout**: switch Hyprland tiling between Dwindle, Master, Scrolling and
-    Monocle, live. The choice is remembered across `hyprctl reload`.
-  - **Power**: power profile (Saver / Balanced / Performance)
-- **More quick actions** in the bottom-right utilities panel: control panel,
-  search, screenshot and colour picker, next to the existing toggles. You can
-  switch each one on or off in Nexus → Utilities.
+- **Clipboard history panel.** Press **Super+V** and it slides out from the bar
+  on the left, in the same style as the notification sidebar. It replaces the
+  dots' fuzzel picker.
+  - Type to search, move with **↑/↓**, and press **Enter** (or click) to copy.
+  - **Delete** removes the selected entry; the sweep button clears everything.
+  - Copied images show as thumbnails.
+  - It also opens with `caelestia shell drawers toggle clipboard`.
+- **More quick toggles** in the bottom-right utilities panel (Super+N):
+  - **Night light**: a warm screen via hyprsunset
+  - **Clipboard**, **Search**, **Screenshot** and **Colour picker** buttons
+
+  You can switch each one on or off in Nexus → Utilities.
+
+To switch Hyprland tiling layouts (Dwindle / Master / Scrolling / Monocle),
+install [HyprMod](https://github.com/BlueManCZ/hyprmod) (`paru -S hyprmod`) and
+change its **Layout** setting (it applies live).
 
 ## Install (Arch Linux)
 
@@ -54,20 +55,19 @@ because this package stands in for it.
 ./install.sh --uninstall
 ```
 
-This reinstalls the stock `caelestia-shell` from the AUR and removes the
-Super+A bind.
+This reinstalls the stock `caelestia-shell` from the AUR and gives Super+V back
+to the fuzzel picker.
 
 ## What's changed from upstream
 
 - **New files:**
-  - `modules/controls/`: the panel
-  - `services/NightLight.qml` (hyprsunset) and `services/Layouts.qml`
+  - `modules/clipboard/`: the clipboard panel
+  - `services/Clipboard.qml` (cliphist) and `services/NightLight.qml` (hyprsunset)
   - `packaging/`, `install.sh`, this file
 - **Small edits to upstream files:**
   - `components/ScreenState.qml`
   - `modules/drawers/{Panels,ContentWindow,Regions}.qml`
   - `modules/Shortcuts.qml`
-  - `modules/bar/components/Clock.qml`
   - `modules/utilities/cards/Toggles.qml`
   - `plugin/src/Caelestia/Config/utilitiesconfig.hpp`
   - `modules/nexus/pages/panels/UtilitiesPanel.qml`

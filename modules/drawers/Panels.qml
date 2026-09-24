@@ -3,7 +3,7 @@ import Quickshell
 import Caelestia.Config
 import qs.components
 import qs.modules.bar as Bar
-import qs.modules.controls as Controls
+import qs.modules.clipboard as ClipboardPanel
 import qs.modules.dashboard as Dashboard
 import qs.modules.launcher as Launcher
 import qs.modules.notifications as Notifications
@@ -34,7 +34,7 @@ Item {
     readonly property alias utilities: utilities
     readonly property alias toasts: toasts
     readonly property alias sidebar: sidebar
-    readonly property alias controls: controls
+    readonly property alias clipboard: clipboard
 
     anchors.fill: parent
     anchors.margins: borderThickness
@@ -155,10 +155,9 @@ Item {
         anchors.topMargin: -notifications.anchors.topMargin
     }
 
-    Controls.Wrapper {
-        id: controls
+    ClipboardPanel.Wrapper {
+        id: clipboard
 
-        screen: root.screen
         screenState: root.screenState
 
         anchors.top: parent.top

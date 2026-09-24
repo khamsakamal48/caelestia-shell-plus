@@ -50,7 +50,7 @@ Region {
     }
 
     R {
-        panel: root.panels.controls
+        panel: root.panels.clipboard
     }
 
     R {

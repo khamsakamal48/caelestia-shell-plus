@@ -125,13 +125,21 @@ StyledRect {
                     }
                 }
                 DelegateChoice {
-                    roleValue: "controls"
+                    roleValue: "clipboard"
                     delegate: Action {
-                        icon: "tune"
+                        icon: "content_paste"
                         onClicked: {
                             root.screenState.utilities = false;
-                            root.screenState.controls = true;
+                            root.screenState.clipboard = true;
                         }
+                    }
+                }
+                DelegateChoice {
+                    roleValue: "nightLight"
+                    delegate: Toggle {
+                        icon: "nightlight"
+                        checked: NightLight.enabled
+                        onClicked: NightLight.toggle()
                     }
                 }
                 DelegateChoice {

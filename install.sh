@@ -4,15 +4,14 @@
 #   ./install.sh               build this checkout and install it (re-run after git pull)
 #   ./install.sh --uninstall   go back to the stock caelestia-shell from the AUR
 #
-# The shell is built as a pacman package that replaces caelestia-shell. The
-# Super+A bind and the saved tiling layout go into the dots' update-safe
-# ~/.config/caelestia/hypr-user.lua, inside a marked block.
+# The shell is built as a pacman package that replaces caelestia-shell. Super+V
+# is rebound from the dots' fuzzel picker to the clipboard panel inside a marked
+# block in the dots' update-safe ~/.config/caelestia/hypr-user.lua.
 set -euo pipefail
 
 here=$(cd "$(dirname "$(readlink -f "$0")")" && pwd)
 cfg=${XDG_CONFIG_HOME:-$HOME/.config}
 user_lua=$cfg/caelestia/hypr-user.lua
-layout_lua=$cfg/caelestia/layout.lua
 begin='-- >>> caelestia-shell-plus >>>'
 end='-- <<< caelestia-shell-plus <<<'
 
@@ -55,20 +54,19 @@ install_all() {
     strip_block
     cat >> "$user_lua" <<EOF
 $begin
-hl.bind("SUPER + A", hl.dsp.global("caelestia:controls"))
-pcall(dofile, os.getenv("HOME") .. "/.config/caelestia/layout.lua")
+hl.unbind("SUPER + V")
+hl.bind("SUPER + V", hl.dsp.global("caelestia:clipboard"))
 $end
 EOF
 
     restart_shell
-    say "done: press Super+A or click the clock in the bar"
+    say "done: press Super+V for the clipboard history"
 }
 
 uninstall_all() {
     [[ $EUID -ne 0 ]] || die "run as your user, not root"
     "$(aur_helper)" -S caelestia-shell
     strip_block
-    rm -f "$layout_lua"
     restart_shell
     say "back to the stock caelestia-shell"
 }

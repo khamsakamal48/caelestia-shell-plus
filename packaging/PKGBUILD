@@ -1,0 +1,77 @@
+# caelestia-shell-plus: caelestia-shell plus Ryoku's control panel and tiling
+# layout switching. Builds this git checkout (run by ../install.sh) and stands
+# in for the AUR caelestia-shell package.
+
+pkgname='caelestia-shell-plus'
+pkgver=0
+pkgrel=1
+pkgdesc='The Caelestia desktop shell with a Ryoku-style control panel and layout switcher'
+arch=('x86_64' 'aarch64')
+url='https://github.com/khamsakamal48/caelestia-shell-plus'
+license=('GPL-3.0-only')
+depends=(
+    'caelestia-cli'
+    'quickshell-git'
+    'glibc'
+    'gcc-libs'
+
+    # Brightness
+    'ddcutil'
+    'brightnessctl'
+
+    # Services
+    'libcava'
+    'networkmanager'
+    'lm_sensors'
+    'aubio'
+    'libpipewire'
+    'libqalculate'
+    'power-profiles-daemon'
+
+    # Fonts
+    'ttf-material-symbols-variable'
+    'ttf-rubik-vf'
+    'ttf-cascadia-code-nerd'
+
+    # Qt modules
+    'qt6-base'
+    'qt6-declarative'
+    'qt6-imageformats'
+    'qt6-m3shapes-git'
+
+    # Extra functionality
+    'swappy'
+    'fish'
+    'bash'
+
+    # caelestia-shell-plus: night light and colour picker
+    'hyprsunset'
+    'hyprpicker'
+)
+optdepends=(
+    'asdbctl: controlling the brightness of Apple Studio Displays'
+    'fprintd: fingerprint unlock for the lock screen'
+    'howdy-next: face unlock for the lock screen'
+)
+makedepends=('cmake' 'ninja' 'qt6-shadertools' 'git')
+provides=("caelestia-shell=${pkgver}")
+conflicts=('caelestia-shell' 'caelestia-shell-git')
+
+_src="$startdir/.."
+
+pkgver() {
+    git -C "$_src" describe --tags --long | sed 's/^v//; s/-\([0-9]*\)-g/.r\1.g/'
+}
+
+build() {
+    cmake -S "$_src" -B build -G Ninja \
+        -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+        -DCMAKE_INSTALL_PREFIX=/ \
+        -DDISTRIBUTOR="caelestia-shell-plus"
+    cmake --build build
+}
+
+package() {
+    DESTDIR="$pkgdir" cmake --install build
+    install -Dm644 "$_src/LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}

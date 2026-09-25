@@ -41,6 +41,12 @@ Item {
                 iconName: "cloud",
                 text: Tr.tr("Weather"),
                 enabled: Config.dashboard.showWeather
+            },
+            {
+                component: aiUsageComponent,
+                iconName: "auto_awesome",
+                text: Tr.tr("AI Usage"),
+                enabled: Config.dashboard.showAiUsage
             }
         ];
         return allTabs.filter(tab => tab.enabled);
@@ -180,6 +186,12 @@ Item {
                 id: weatherComponent
 
                 WeatherTab {}
+            }
+
+            Component {
+                id: aiUsageComponent
+
+                AiUsage {}
             }
 
             Behavior on contentX {

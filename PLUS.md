@@ -33,6 +33,12 @@ inspired by [Ryoku](https://github.com/ryoku-dev/ryoku):
 - **[HyprMod](https://github.com/BlueManCZ/hyprmod)** is installed from the AUR.
   Use it to switch Hyprland tiling layouts (Dwindle / Master / Scrolling /
   Monocle) under **Layout**; changes apply live.
+- **Caelestia's lock screen at boot.** The installer sets up greetd to log you
+  in once per boot, and the shell starts already locked, so you sign in on the
+  same lock screen as Super+L. After you log out, greetd shows a plain text
+  login. If another display manager (SDDM, GDM...) is enabled, the installer
+  leaves it alone. Your keyring isn't unlocked at login, since no password is
+  typed at that point.
 
 ## Install (Arch Linux)
 

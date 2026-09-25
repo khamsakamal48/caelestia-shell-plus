@@ -9,7 +9,8 @@
 # block in the dots' update-safe ~/.config/caelestia/hypr-user.lua, and Print
 # opens the full-screen shot in Satty for annotation. The cursor is set to
 # Bibata Modern Ice in the same block, which also hooks caelestia-monitor to
-# display hotplug.
+# display hotplug. Boot logs straight in through greetd and the shell starts on
+# its own lock screen (skipped if another display manager is enabled).
 set -euo pipefail
 
 here=$(cd "$(dirname "$(readlink -f "$0")")" && pwd)
@@ -31,6 +32,41 @@ restart_shell() {
     sleep 1
     caelestia shell -d >/dev/null 2>&1 || say "start the shell with: caelestia shell -d"
     hyprctl reload >/dev/null 2>&1 || true
+}
+
+greetd_conf=/etc/greetd/config.toml
+
+# Autologin once per boot, flagging the session so the shell starts locked
+# (modules/lock/Lock.qml). After a logout, greetd falls back to agreety.
+setup_login() {
+    local dm
+    dm=$(readlink /etc/systemd/system/display-manager.service 2>/dev/null || true)
+    if [[ -n $dm && $dm != *greetd* ]]; then
+        say "$(basename "$dm" .service) is your display manager, leaving login as is"
+        return
+    fi
+    sudo pacman -S --needed --noconfirm greetd
+    local hypr=start-hyprland
+    command -v start-hyprland >/dev/null || hypr=Hyprland
+    [[ -f $greetd_conf.orig ]] || sudo cp "$greetd_conf" "$greetd_conf.orig"
+    sudo tee "$greetd_conf" >/dev/null <<EOF
+[terminal]
+vt = 1
+
+[default_session]
+command = "agreety --cmd $hypr"
+user = "greeter"
+
+[initial_session]
+command = "sh -c 'touch \\"\$XDG_RUNTIME_DIR/caelestia-lock-on-start\\"; exec $hypr'"
+user = "$USER"
+EOF
+    sudo systemctl enable greetd
+}
+
+undo_login() {
+    [[ -f $greetd_conf.orig ]] && sudo mv "$greetd_conf.orig" "$greetd_conf"
+    return 0
 }
 
 aur_helper() {
@@ -82,6 +118,7 @@ EOF
     hyprctl setcursor Bibata-Modern-Ice 24 >/dev/null 2>&1 || true
     gsettings set org.gnome.desktop.interface cursor-theme Bibata-Modern-Ice 2>/dev/null || true
 
+    setup_login
     restart_shell
     say "done: press Super+V for the clipboard history"
 }
@@ -90,6 +127,7 @@ uninstall_all() {
     [[ $EUID -ne 0 ]] || die "run as your user, not root"
     "$(aur_helper)" -S caelestia-shell
     strip_block
+    undo_login
     restart_shell
     say "back to the stock caelestia-shell"
 }

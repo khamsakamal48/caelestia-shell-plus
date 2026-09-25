@@ -40,6 +40,17 @@ Scope {
         }
     }
 
+    // Boot autologin (install.sh's greetd initial_session) drops this flag, so
+    // the first shell of the session starts locked. rm succeeds only once.
+    Process {
+        running: true
+        command: ["rm", `${Quickshell.env("XDG_RUNTIME_DIR")}/caelestia-lock-on-start`]
+        onExited: code => {
+            if (code === 0)
+                lock.locked = true;
+        }
+    }
+
     // qmllint disable unresolved-type
     CustomShortcut {
         // qmllint enable unresolved-type

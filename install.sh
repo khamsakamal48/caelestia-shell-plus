@@ -109,6 +109,8 @@ hl.unbind("SUPER + V")
 hl.bind("SUPER + V", hl.dsp.global("caelestia:clipboard"))
 hl.unbind("Print")
 hl.bind("Print", hl.dsp.exec_cmd("grim - | caelestia-annotate -"))
+-- Random wallpaper (and scheme) from the wallpaper folder, as Ryoku's Super+Shift+W.
+hl.bind("SUPER + SHIFT + W", hl.dsp.exec_cmd("caelestia wallpaper -r"))
 require("variables").cursorTheme = "Bibata-Modern-Ice"
 hl.env("XCURSOR_THEME", "Bibata-Modern-Ice")
 -- Display hotplug, as Ryoku does it: no raw "scale changed" toast, and

@@ -15,6 +15,8 @@ inspired by [Ryoku](https://github.com/ryoku-dev/ryoku):
   - A copy stays pasteable after you close the app you copied it from
     (`wl-clip-persist`).
   - It also opens with `caelestia shell drawers toggle clipboard`.
+- **Random wallpaper.** **Super+Shift+W** switches to a random wallpaper from
+  your wallpaper folder (and recolours the scheme), like Ryoku.
 - **More quick toggles** in the bottom-right utilities panel (Super+N):
   - **Night light**: a warm screen via hyprsunset
   - **Clipboard**, **Search**, **Screenshot** and **Colour picker** buttons

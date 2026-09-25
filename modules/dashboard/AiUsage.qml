@@ -8,6 +8,7 @@ import Caelestia.Config
 import Caelestia.I18n
 import qs.components
 import qs.components.controls
+import qs.components.effects
 import qs.services
 import qs.utils
 
@@ -85,11 +86,10 @@ Item {
             RowLayout {
                 spacing: Tokens.spacing.small
 
-                MaterialIcon {
-                    text: "auto_awesome"
-                    fill: 1
-                    color: Colours.palette.m3primary
-                    fontStyle: Tokens.font.icon.medium
+                ColouredIcon {
+                    source: Qt.resolvedUrl(`${Quickshell.shellDir}/assets/claude.svg`)
+                    implicitSize: Math.round(Tokens.font.title.medium.pointSize * 1.6)
+                    colour: Colours.palette.m3primary
                 }
 
                 StyledText {

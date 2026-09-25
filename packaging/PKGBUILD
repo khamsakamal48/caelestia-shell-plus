@@ -50,6 +50,9 @@ depends=(
     'satty'
     'grim'
     'wl-clipboard'
+
+    # caelestia-shell-plus: display hotplug fix-up
+    'jq'
 )
 optdepends=(
     'asdbctl: controlling the brightness of Apple Studio Displays'
@@ -77,5 +80,6 @@ build() {
 package() {
     DESTDIR="$pkgdir" cmake --install build
     install -Dm755 "$_src/packaging/caelestia-annotate" "$pkgdir/usr/bin/caelestia-annotate"
+    install -Dm755 "$_src/packaging/caelestia-monitor" "$pkgdir/usr/bin/caelestia-monitor"
     install -Dm644 "$_src/LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }

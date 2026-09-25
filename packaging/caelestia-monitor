@@ -1,0 +1,60 @@
+#!/usr/bin/env bash
+# Display hotplug fix-up, after Ryoku's ryoku-monitor. Run by Hyprland on login
+# and on every monitor add/remove (see install.sh's hypr-user.lua block).
+#
+# For each output not configured by hand (HyprMod or hypr-user.lua):
+#   - outputs in one gap-free row from x=0 (only when nothing is hand-placed)
+#   - mode re-asserted as highrr until the link has trained: a cold hotplug link
+#     often advertises a fallback mode first, Hyprland picks from that and never
+#     re-picks, so the display stays wrong/flickering until a reload.
+# Nothing is written to disk; HyprMod owns persistent layouts.
+set -euo pipefail
+
+cfg=${XDG_CONFIG_HOME:-$HOME/.config}
+
+# one run at a time: an add and a remove can fire back to back
+exec 9>"${XDG_RUNTIME_DIR:-/tmp}/caelestia-monitor.lock"
+flock 9
+
+# outputs named in a hand-written config are left alone
+pinned() {
+    cat "$cfg"/hypr/hyprland-gui.lua "$cfg"/hypr/hyprland-gui.conf "$cfg"/caelestia/hypr-user.lua 2>/dev/null |
+        grep -oE 'output[[:space:]]*=[[:space:]]*"[^"]+"|^[[:space:]]*monitor[[:space:]]*=[[:space:]]*[^,#]+' |
+        sed -E 's/.*"([^"]+)".*/\1/; s/^[[:space:]]*monitor[[:space:]]*=[[:space:]]*//; s/[[:space:]]+$//' |
+        jq -R . | jq -sc .
+}
+
+# one hl.monitor rule per output that needs changing
+changes() {
+    hyprctl monitors all -j | jq -r --argjson pinned "$(pinned)" '
+      # live mode below the best advertised one (more pixels, or more Hz at top res)
+      def drift:
+        [ .availableModes[]? | capture("(?<w>[0-9]+)x(?<h>[0-9]+)@(?<r>[0-9.]+)")
+          | { px: ((.w | tonumber) * (.h | tonumber)), r: (.r | tonumber) } ] as $am
+        | ($am | map(.px) | max // 0) as $maxpx
+        | ($am | map(select(.px == $maxpx) | .r) | max // 0) as $maxrr
+        | $maxpx > .width * .height or $maxrr - .refreshRate > 1;
+
+      [ .[] | select(.width > 0 and .height > 0 and (.mirrorOf // "none") == "none") ] as $on
+      | ($on | any(.name as $n | $pinned | index($n))) as $handplaced
+      | reduce ($on | sort_by(.x))[] as $m ({ x: 0, out: [] };
+          if ($pinned | index($m.name)) then . else
+            (if $handplaced then "\($m.x)x\($m.y)" else "\(.x)x0" end) as $pos
+            | (if ($m.transform % 2) == 1 then $m.height else $m.width end) as $w
+            | .x += ($w / $m.scale + 0.5 | floor)
+            | if $pos != "\($m.x)x\($m.y)" or ($m | drift) then
+                .out += ["output = \($m.name | @json), mode = \"highrr\", position = \"\($pos)\", scale = \($m.scale), transform = \($m.transform)"]
+              else . end
+          end)
+      | .out[]'
+}
+
+# bounded: a link that never reaches its top mode is retried 6 times, then left
+for _ in 1 2 3 4 5 6; do
+    rules=$(changes) || exit 0
+    [[ -n $rules ]] || exit 0
+    while IFS= read -r rule; do
+        hyprctl eval "hl.monitor({ $rule })" >/dev/null 2>&1 || true
+    done <<<"$rules"
+    sleep 2
+done

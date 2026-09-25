@@ -8,7 +8,8 @@
 # is rebound from the dots' fuzzel picker to the clipboard panel inside a marked
 # block in the dots' update-safe ~/.config/caelestia/hypr-user.lua, and Print
 # opens the full-screen shot in Satty for annotation. The cursor is set to
-# Bibata Modern Ice in the same block.
+# Bibata Modern Ice in the same block, which also hooks caelestia-monitor to
+# display hotplug.
 set -euo pipefail
 
 here=$(cd "$(dirname "$(readlink -f "$0")")" && pwd)
@@ -63,6 +64,18 @@ hl.unbind("Print")
 hl.bind("Print", hl.dsp.exec_cmd("grim - | caelestia-annotate -"))
 require("variables").cursorTheme = "Bibata-Modern-Ice"
 hl.env("XCURSOR_THEME", "Bibata-Modern-Ice")
+-- Display hotplug, as Ryoku does it: no raw "scale changed" toast, and
+-- caelestia-monitor re-asserts each new display's best mode once its link has
+-- trained (else it can stay stuck on a fallback mode and flicker until reload).
+hl.config({ misc = { disable_scale_notification = true } })
+local function settle_monitors() hl.exec_cmd("caelestia-monitor") end
+hl.on("hyprland.start", settle_monitors)
+hl.on("monitor.added", settle_monitors)
+hl.on("monitor.removed", settle_monitors)
+-- Intel/AMD: skip DRM format modifiers, which flicker or black out outputs after
+-- a hotplug or screen capture (Ryoku sets the same). Breaks nvidia, so not there.
+local nv = io.open("/proc/driver/nvidia/version")
+if nv then nv:close() else hl.env("AQ_NO_MODIFIERS", "1") end
 $end
 EOF
 

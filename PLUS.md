@@ -22,6 +22,14 @@ inspired by [Ryoku](https://github.com/ryoku-dev/ryoku):
 - **Caps Lock and Num Lock are separate status icons**, so you can hide either
   one in Nexus → Taskbar → Status icons. If your config still lists the old
   combined "Lock keys (both)" entry, remove it there and add the ones you want.
+- **Steadier external displays**, the way Ryoku handles them. When a display
+  is plugged in or removed, `caelestia-monitor` lines the displays up
+  left to right with no gaps. Until the new link has trained, it also keeps
+  re-applying each display's best mode, so a display no longer stays stuck on
+  a fallback mode and flickering until you reload. On Intel/AMD, DRM format
+  modifiers are turned off (`AQ_NO_MODIFIERS=1`, from the next login), and
+  Hyprland's own "scale changed" popup is hidden. Displays you set up in
+  HyprMod or `hypr-user.lua` are left alone.
 - **[HyprMod](https://github.com/BlueManCZ/hyprmod)** is installed from the AUR.
   Use it to switch Hyprland tiling layouts (Dwindle / Master / Scrolling /
   Monocle) under **Layout**; changes apply live.

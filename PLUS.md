@@ -9,6 +9,11 @@ inspired by [Ryoku](https://github.com/ryoku-dev/ryoku):
   - Type to search, move with **↑/↓**, and press **Enter** (or click) to copy.
   - **Delete** removes the selected entry; the sweep button clears everything.
   - Copied images show as thumbnails.
+  - The ☆ button stars an entry. Starred entries stay at the top, and wiping
+    the history doesn't remove them.
+  - Search is fuzzy: "gtcm" finds "git commit".
+  - A copy stays pasteable after you close the app you copied it from
+    (`wl-clip-persist`).
   - It also opens with `caelestia shell drawers toggle clipboard`.
 - **More quick toggles** in the bottom-right utilities panel (Super+N):
   - **Night light**: a warm screen via hyprsunset
@@ -17,6 +22,21 @@ inspired by [Ryoku](https://github.com/ryoku-dev/ryoku):
   You can switch each one on or off in Nexus → Utilities.
 - **Bibata Modern Ice cursor** (from `bibata-cursor-theme-bin` in the AUR),
   set in the installer's block in `~/.config/caelestia/hypr-user.lua`.
+- **Choose what the bar logo opens.** Turn on Nexus → Taskbar → "Logo opens
+  quick settings" to open the utilities panel instead of the launcher.
+- **Sleep and wake, as Ryoku does it.** The shell holds suspend until the lock
+  screen is actually showing, so the machine never sleeps or wakes on an
+  unlocked desktop. The installer lets logind wait up to 15s for this (the
+  default is 5s). For 15s after waking, the shell keeps turning the displays
+  back on, so closing the lid with idle timeouts off no longer wakes to a
+  black screen.
+- **Brightness on hybrid laptops.** On Intel + NVIDIA laptops, the slider and
+  brightness keys now control the real panel instead of a phantom device
+  (`caelestia-backlight` picks the one wired to the connected built-in screen).
+- **The keyboard layout no longer sticks on "ERROR"** when Hyprland briefly
+  reports it, for example while a virtual keyboard is changing.
+- **Localised Pictures folder.** Screenshots go to your real Pictures folder
+  (`~/Bilder`, `~/Images`...) instead of a new English `~/Pictures`.
 - **Click the bar clock** to open the dashboard on its calendar (scroll to
   change month); click again to close.
 - **Caps Lock and Num Lock are separate status icons**, so you can hide either
@@ -83,6 +103,7 @@ to the fuzzel picker.
 - **New files:**
   - `modules/clipboard/`: the clipboard panel
   - `services/Clipboard.qml` (cliphist) and `services/NightLight.qml` (hyprsunset)
+  - `packaging/caelestia-backlight` (+ `test-caelestia-backlight.sh`)
   - `packaging/`, `install.sh`, this file
 - **Small edits to upstream files:**
   - `components/ScreenState.qml`
@@ -94,5 +115,8 @@ to the fuzzel picker.
   - `modules/bar/{Bar,components/Clock,components/StatusIcons,components/status/LockStatus}.qml`
   - `modules/nexus/pages/panels/taskbar/BarStatusIcons.qml`
   - `plugin/src/Caelestia/Config/barconfig.hpp`
+  - `modules/IdleMonitors.qml`, `services/Brightness.qml`
+  - `modules/bar/components/OsIcon.qml`, `modules/nexus/pages/panels/TaskbarPanel.qml`
+  - `plugin/src/Caelestia/Services/hyprdevices.cpp`
 
 Upstream releases are merged into `main`.

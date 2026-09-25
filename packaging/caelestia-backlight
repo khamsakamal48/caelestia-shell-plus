@@ -1,0 +1,31 @@
+#!/bin/sh
+# Print the backlight device of the connected internal panel. A hybrid laptop
+# lists phantoms (acpi_video0, nvidia_0 on a parked GPU) beside the real one,
+# and plain brightnessctl may pick a phantom: the slider moves, the screen
+# doesn't. So pick the backlight whose DRM connector is a connected eDP/LVDS/DSI
+# panel, then fall back to a name list, then to anything (as Ryoku does).
+bl=${CAELESTIA_BACKLIGHT_PATH:-/sys/class/backlight}
+drm=${CAELESTIA_DRM_PATH:-/sys/class/drm}
+
+connected() { [ "$(cat "$1/status" 2>/dev/null)" = connected ]; }
+
+for d in "$bl"/*; do
+    dev=$(readlink -f "$d/device") || continue
+    case ${dev##*/} in
+    # device is the connector itself (intel/amdgpu PWM)
+    *-eDP-* | *-LVDS-* | *-DSI-*) connected "$dev" && { echo "${d##*/}"; exit 0; } ;;
+    # device is a GPU's PCI node (nvidia_0): check that card's panels
+    *) for card in "$drm"/card[0-9]*; do
+        case ${card##*/} in *-*) continue ;; esac
+        [ "$(readlink -f "$card/device")" = "$dev" ] || continue
+        for c in "$card"-eDP-* "$card"-LVDS-* "$card"-DSI-*; do
+            connected "$c" && { echo "${d##*/}"; exit 0; }
+        done
+    done ;;
+    esac
+done
+
+for d in "$bl"/amdgpu_bl* "$bl"/intel_backlight "$bl"/acpi_video* "$bl"/*; do
+    [ -e "$d" ] && { echo "${d##*/}"; exit 0; }
+done
+exit 1

@@ -19,6 +19,9 @@ Singleton {
     }
     readonly property list<Monitor> monitors: variants.instances // qmllint disable incompatible-type
     property bool appleDisplayPresent: false
+    // The internal panel's backlight (caelestia-backlight skips hybrid-laptop phantoms)
+    property string backlight
+    readonly property list<string> brightnessctl: backlight ? ["brightnessctl", "-d", backlight] : ["brightnessctl"]
 
     function getMonitorForScreen(screen: ShellScreen): var {
         return monitors.find(m => m.modelData === screen); // qmllint disable missing-property
@@ -77,6 +80,14 @@ Singleton {
         command: ["sh", "-c", "asdbctl get"] // To avoid warnings if asdbctl is not installed
         stdout: StdioCollector {
             onStreamFinished: root.appleDisplayPresent = text.trim().length > 0
+        }
+    }
+
+    Process {
+        running: true
+        command: ["caelestia-backlight"]
+        stdout: StdioCollector {
+            onStreamFinished: root.backlight = text.trim()
         }
     }
 
@@ -214,7 +225,7 @@ Singleton {
             else if (isDdc)
                 Quickshell.execDetached(["ddcutil", "-b", busNum, "setvcp", "10", rounded]);
             else
-                Quickshell.execDetached(["brightnessctl", "s", `${rounded}%`]);
+                Quickshell.execDetached([...root.brightnessctl, "s", `${rounded}%`]);
 
             if (isDdc)
                 timer.restart();
@@ -226,12 +237,20 @@ Singleton {
             else if (isDdc)
                 initProc.command = ["ddcutil", "-b", busNum, "getvcp", "10", "--brief"];
             else
-                initProc.command = ["sh", "-c", "echo a b c $(brightnessctl g) $(brightnessctl m)"];
+                initProc.command = ["sh", "-c", 'echo a b c $("$@" g) $("$@" m)', "sh", ...root.brightnessctl];
 
             initProc.running = true;
         }
 
         onBusNumChanged: initBrightness()
+        readonly property Connections backlightWatch: Connections {
+            function onBacklightChanged(): void {
+                if (!monitor.isDdc && !monitor.isAppleDisplay)
+                    monitor.initBrightness();
+            }
+
+            target: root
+        }
         Component.onCompleted: initBrightness()
     }
 }

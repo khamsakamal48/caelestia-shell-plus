@@ -39,7 +39,6 @@ PageBase {
         }
 
         StepperRow {
-            last: true
             label: Tr.tr("Drag threshold")
             subtext: Tr.tr("Pixels dragged before the bar reveals")
             value: Config.bar.dragThreshold
@@ -47,6 +46,14 @@ PageBase {
             to: 200
             stepSize: 5
             onMoved: v => GlobalConfig.bar.dragThreshold = v
+        }
+
+        ToggleRow {
+            last: true
+            text: Tr.tr("Logo opens quick settings")
+            subtext: Tr.tr("Click the bar logo for the utilities panel instead of the launcher")
+            checked: Config.bar.logoOpensUtilities
+            onToggled: GlobalConfig.bar.logoOpensUtilities = checked
         }
 
         // Components

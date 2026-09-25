@@ -53,6 +53,10 @@ depends=(
 
     # caelestia-shell-plus: display hotplug fix-up
     'jq'
+
+    # caelestia-shell-plus: clipboard outlives its app, localised Pictures folder
+    'wl-clip-persist'
+    'xdg-user-dirs'
 )
 optdepends=(
     'asdbctl: controlling the brightness of Apple Studio Displays'
@@ -81,5 +85,6 @@ package() {
     DESTDIR="$pkgdir" cmake --install build
     install -Dm755 "$_src/packaging/caelestia-annotate" "$pkgdir/usr/bin/caelestia-annotate"
     install -Dm755 "$_src/packaging/caelestia-monitor" "$pkgdir/usr/bin/caelestia-monitor"
+    install -Dm755 "$_src/packaging/caelestia-backlight" "$pkgdir/usr/bin/caelestia-backlight"
     install -Dm644 "$_src/LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }

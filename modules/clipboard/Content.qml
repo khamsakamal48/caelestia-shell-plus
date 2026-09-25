@@ -10,18 +10,23 @@ import qs.components
 import qs.components.containers
 import qs.components.controls
 import qs.services
+import "../../utils/scripts/fzf.js" as Fzf
 
 // Clipboard history, styled like the notification sidebar: a count + title
 // header, a search field, and the entries in a rounded well. Enter or a click
-// copies an entry and closes; Delete removes it.
+// copies an entry and closes; Delete removes it. Starred entries sit on top.
 Item {
     id: root
 
     required property ScreenState screenState
 
+    readonly property var all: [...Clipboard.stars, ...Clipboard.entries]
+    readonly property var finder: new Fzf.Finder(all, {
+        selector: e => e.text
+    })
     readonly property var shown: {
-        const q = search.text.trim().toLowerCase();
-        return q ? Clipboard.entries.filter(e => e.text.toLowerCase().includes(q)) : Clipboard.entries;
+        const q = search.text.trim();
+        return q ? finder.find(q).map(r => r.item) : all;
     }
 
     function close(): void {
@@ -176,16 +181,25 @@ Item {
                             }
 
                             StyledText {
-                                text: item.modelData.image ? `${item.modelData.image.ext.toUpperCase()} · ${item.modelData.image.width}×${item.modelData.image.height}` : ""
+                                text: !item.modelData.image ? "" : item.modelData.starred ? item.modelData.image.ext.toUpperCase() : `${item.modelData.image.ext.toUpperCase()} · ${item.modelData.image.width}×${item.modelData.image.height}`
                                 color: Colours.palette.m3outline
                                 font: Tokens.font.body.small
                             }
 
                             Process {
                                 running: !!item.modelData.image
-                                command: item.modelData.image ? Clipboard.decodeCommand(item.modelData) : []
+                                command: item.modelData.image && !item.modelData.starred ? Clipboard.decodeCommand(item.modelData) : ["true"]
                                 onExited: thumb.source = `file://${Clipboard.thumbnailPath(item.modelData)}`
                             }
+                        }
+
+                        IconButton {
+                            Layout.alignment: Qt.AlignTop
+                            type: IconButton.Text
+                            icon: "star"
+                            isToggle: true
+                            checked: !!item.modelData.starred
+                            onClicked: item.modelData.starred ? Clipboard.unstar(item.modelData) : Clipboard.star(item.modelData)
                         }
 
                         IconButton {

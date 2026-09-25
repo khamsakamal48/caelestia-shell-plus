@@ -3,6 +3,7 @@ pragma ComponentBehavior: Bound
 import "lock"
 import QtQuick
 import Quickshell
+import Quickshell.Io
 import Quickshell.Wayland
 import Quickshell.Services.UPower
 import Caelestia.Config
@@ -37,10 +38,58 @@ Scope {
             Quickshell.execDetached(action);
     }
 
+    // Hold suspend until the lock is on screen, else the machine sleeps (and
+    // wakes) showing the desktop. logind waits up to InhibitDelayMaxSec.
+    Process {
+        id: sleepDelay
+
+        property bool sleeping
+
+        running: GlobalConfig.general.idle.lockBeforeSleep
+        command: ["systemd-inhibit", "--what=sleep", "--mode=delay", "--who=caelestia-shell", "--why=Lock the screen before sleep", "sleep", "infinity"]
+    }
+
+    Connections {
+        function onSecureChanged(): void {
+            if (root.lock.lock.secure && sleepDelay.sleeping)
+                sleepDelay.running = false;
+        }
+
+        target: root.lock.lock
+    }
+
+    // After a wake, keep turning the displays back on for 15s. A panel still
+    // re-training can drop a single "on", and nothing else powers it back up
+    // when the idle timeouts are off, so a lid close woke to a black screen.
+    Timer {
+        id: wakeGuard
+
+        property int left
+
+        interval: 1000
+        repeat: true
+        onTriggered: {
+            root.handleIdleAction("dpms on");
+            if (--left <= 0)
+                stop();
+        }
+    }
+
     Connections {
         function onAboutToSleep(): void {
-            if (GlobalConfig.general.idle.lockBeforeSleep)
+            if (GlobalConfig.general.idle.lockBeforeSleep) {
+                sleepDelay.sleeping = true;
                 root.lock.lock.locked = true;
+                if (root.lock.lock.secure)
+                    sleepDelay.running = false;
+            }
+        }
+
+        function onResumed(): void {
+            sleepDelay.sleeping = false;
+            sleepDelay.running = GlobalConfig.general.idle.lockBeforeSleep;
+            wakeGuard.left = 15;
+            wakeGuard.restart();
         }
 
         function onLockRequested(): void {

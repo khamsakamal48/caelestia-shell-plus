@@ -89,7 +89,14 @@ bool HyprKeyboard::main() const {
     return m_lastIpcObject.value(u"main"_s).toBool();
 }
 
-bool HyprKeyboard::updateLastIpcObject(const QJsonObject& object) {
+bool HyprKeyboard::updateLastIpcObject(const QJsonObject& incoming) {
+    // Hyprland reports "ERROR" as the keymap mid xkb transition (a virtual
+    // keyboard flapping, e.g. dictation) and sends no event once it settles, so
+    // the bar stuck on it. Keep the last good layout instead.
+    auto object = incoming;
+    if (object.value(u"active_keymap"_s).toString() == u"ERROR"_s && m_lastIpcObject.contains(u"active_keymap"_s))
+        object[u"active_keymap"_s] = m_lastIpcObject.value(u"active_keymap"_s);
+
     if (m_lastIpcObject == object) {
         return false;
     }

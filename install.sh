@@ -9,7 +9,9 @@
 # block in the dots' update-safe ~/.config/caelestia/hypr-user.lua, and Print
 # opens the full-screen shot in Satty for annotation. The cursor is set to
 # Bibata Modern Ice in the same block, which also hooks caelestia-monitor to
-# display hotplug. Boot logs straight in through greetd and the shell starts on
+# display hotplug, keeps copies alive (wl-clip-persist) and exports the
+# localised Pictures folder. logind may wait 15s for the lock before sleep.
+# Boot logs straight in through greetd and the shell starts on
 # its own lock screen (skipped if another display manager is enabled).
 set -euo pipefail
 
@@ -35,6 +37,15 @@ restart_shell() {
 }
 
 greetd_conf=/etc/greetd/config.toml
+logind_conf=/etc/systemd/logind.conf.d/caelestia-shell-plus.conf
+
+# The shell holds suspend until its lock is up (modules/IdleMonitors.qml), but
+# logind's default 5s cap can run out while a display is reconfiguring (undock
+# as the lid shuts) and the machine sleeps unlocked. Ryoku raises it the same way.
+setup_logind() {
+    printf '[Login]\nInhibitDelayMaxSec=15\n' | sudo install -Dm644 /dev/stdin "$logind_conf"
+    sudo systemctl reload systemd-logind 2>/dev/null || true
+}
 
 # Autologin once per boot, flagging the session so the shell starts locked
 # (modules/lock/Lock.qml). After a logout, greetd falls back to agreety.
@@ -112,12 +123,21 @@ hl.on("monitor.removed", settle_monitors)
 -- a hotplug or screen capture (Ryoku sets the same). Breaks nvidia, so not there.
 local nv = io.open("/proc/driver/nvidia/version")
 if nv then nv:close() else hl.env("AQ_NO_MODIFIERS", "1") end
+-- Keep a copy alive after the app it came from closes (Ryoku runs the same).
+hl.on("hyprland.start", function() hl.exec_cmd("pgrep -x wl-clip-persist || wl-clip-persist --clipboard regular") end)
+-- The session never exports this, so a localised Pictures folder (~/Bilder...)
+-- got a stray English ~/Pictures for screenshots beside it.
+local xdg = io.popen("xdg-user-dir PICTURES 2>/dev/null")
+local pictures = xdg and xdg:read("l")
+if xdg then xdg:close() end
+if pictures and pictures ~= "" then hl.env("XDG_PICTURES_DIR", pictures) end
 $end
 EOF
 
     hyprctl setcursor Bibata-Modern-Ice 24 >/dev/null 2>&1 || true
     gsettings set org.gnome.desktop.interface cursor-theme Bibata-Modern-Ice 2>/dev/null || true
 
+    setup_logind
     setup_login
     restart_shell
     say "done: press Super+V for the clipboard history"
@@ -128,6 +148,7 @@ uninstall_all() {
     "$(aur_helper)" -S caelestia-shell
     strip_block
     undo_login
+    sudo rm -f "$logind_conf"
     restart_shell
     say "back to the stock caelestia-shell"
 }

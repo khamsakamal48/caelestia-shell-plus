@@ -22,6 +22,11 @@ inspired by [Ryoku](https://github.com/ryoku-dev/ryoku):
   You can switch each one on or off in Nexus → Utilities.
 - **Bibata Modern Ice cursor** (from `bibata-cursor-theme-bin` in the AUR),
   set in the installer's block in `~/.config/caelestia/hypr-user.lua`.
+- **A crowded tray scrolls.** Past 8 icons, the tray stops growing and you
+  scroll through its icons with the mouse wheel, so it can't push the clock and
+  status icons off the bar. Over the tray, the wheel scrolls the icons instead
+  of changing volume or brightness. Change the limit in Nexus → Taskbar → Tray
+  → "Icons before scrolling" (0 turns it off).
 - **Choose what the bar logo opens.** Turn on Nexus → Taskbar → "Logo opens
   quick settings" to open the utilities panel instead of the launcher.
 - **Sleep and wake, as Ryoku does it.** The shell holds suspend until the lock
@@ -126,6 +131,7 @@ to the fuzzel picker.
   - `modules/IdleMonitors.qml`, `services/Brightness.qml`
   - `modules/lock/{Pam,center/StateMessage,center/PasswordInput}.qml`
   - `modules/bar/components/OsIcon.qml`, `modules/nexus/pages/panels/TaskbarPanel.qml`
+  - `modules/bar/components/Tray.qml`, `modules/nexus/pages/panels/taskbar/BarTray.qml`
   - `plugin/src/Caelestia/Services/hyprdevices.cpp`
 
 Upstream releases are merged into `main`.

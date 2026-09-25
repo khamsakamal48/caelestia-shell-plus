@@ -37,6 +37,16 @@ PageBase {
             onToggled: GlobalConfig.bar.tray.compact = checked
         }
 
+        StepperRow {
+            label: Tr.tr("Icons before scrolling")
+            subtext: Tr.tr("More tray icons than this scroll with the mouse wheel (0 = never)")
+            value: Config.bar.tray.maxIcons
+            from: 0
+            to: 30
+            stepSize: 1
+            onMoved: v => GlobalConfig.bar.tray.maxIcons = v
+        }
+
         ToggleRow {
             last: true
             text: Tr.tr("Popout on hover")

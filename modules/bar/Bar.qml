@@ -42,7 +42,6 @@ ColumnLayout {
         }
 
         const id = ch.entryId;
-        const top = ch.y;
 
         if (id === "statusIcons" && Config.bar.popouts.statusIcons) {
             const items = (ch.item as StatusIcons).items;
@@ -55,7 +54,8 @@ ColumnLayout {
         } else if (id === "tray" && Config.bar.popouts.tray) {
             const tray = ch.item as Tray;
             if (!Config.bar.tray.compact || (tray.expanded && !tray.expandIcon.contains(mapToItem(tray.expandIcon, tray.implicitWidth / 2, y)))) {
-                const index = Math.floor(((y - top - tray.padding * 2 + tray.spacing) / tray.layout.implicitHeight) * tray.items.count);
+                const inLayout = mapToItem(tray.layout, width / 2, y).y; // follows the tray's scroll
+                const index = Math.floor(inLayout / (tray.layout.implicitHeight + tray.layout.spacing) * tray.items.count);
                 const trayItem = tray.items.itemAt(index);
                 if (trayItem) {
                     popouts.currentName = `traymenu${index}`;
@@ -77,7 +77,12 @@ ColumnLayout {
 
     function handleWheel(y: real, angleDelta: point): void {
         const ch = childAt(width / 2, y) as EntryWrapper;
-        if (ch?.entryId === "workspaces" && Config.bar.scrollActions.workspaces) {
+        const tray = ch?.entryId === "tray" ? ch.item as Tray : null;
+        if (tray?.canScroll && (tray.expanded || !Config.bar.tray.compact)) {
+            // An overflowing tray scrolls its icons instead of volume/brightness
+            popouts.hasCurrent = false;
+            tray.scroll(angleDelta.y);
+        } else if (ch?.entryId === "workspaces" && Config.bar.scrollActions.workspaces) {
             // Workspace scroll
             const mon = Hypr.monitorFor(screen);
             const specialWs = mon?.lastIpcObject.specialWorkspace.name;

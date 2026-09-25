@@ -90,6 +90,7 @@ class BarTray : public settings::ObjectNode {
     CONFIG_PROPERTY(bool, background, false)
     CONFIG_PROPERTY(bool, recolour, false)
     CONFIG_PROPERTY(bool, compact, false)
+    CONFIG_PROPERTY(int, maxIcons, 8)
     CONFIG_GLOBAL_LIST(BarTrayIconSubList, iconSubs, {})
     CONFIG_GLOBAL_PROPERTY(QStringList, hiddenIcons, {})
 };

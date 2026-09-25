@@ -117,7 +117,8 @@ class BarConfig : public settings::ObjectNode {
     CONFIG_SUBOBJECT(BarClock, clock)
     CONFIG_LIST(EntryList, statusIcons,
         DEFAULT_ARG({
-            LIST_ENTRY(lockStatus, true),
+            LIST_ENTRY(capsLock, true),
+            LIST_ENTRY(numLock, true),
             LIST_ENTRY(audio, false),
             LIST_ENTRY(microphone, false),
             LIST_ENTRY(kbLayout, false),

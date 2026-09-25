@@ -9,7 +9,9 @@ PageBase {
     id: root
 
     readonly property var builtinIcons: ({
-            lockStatus: Tr.tr("Lock keys"),
+            capsLock: Tr.tr("Caps Lock"),
+            numLock: Tr.tr("Num Lock"),
+            lockStatus: Tr.tr("Lock keys (both)"),
             kbLayout: Tr.tr("Keyboard layout"),
             audio: Tr.tr("Speakers"),
             microphone: Tr.tr("Microphone"),

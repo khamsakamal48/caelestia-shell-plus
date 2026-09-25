@@ -51,7 +51,7 @@ install_all() {
     pkg=$(ls -t "$here"/packaging/caelestia-shell-plus-*.pkg.tar.* | grep -v -- '-debug-' | head -1)
     say "installing $(basename "$pkg") (answer y to replace caelestia-shell)"
     sudo pacman -U "$pkg"
-    "$(aur_helper)" -S --needed --noconfirm bibata-cursor-theme-bin
+    "$(aur_helper)" -S --needed --noconfirm bibata-cursor-theme-bin hyprmod
 
     mkdir -p "$(dirname "$user_lua")"
     strip_block

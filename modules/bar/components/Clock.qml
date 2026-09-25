@@ -10,6 +10,7 @@ import qs.services
 StyledRect {
     id: root
 
+    required property ScreenState screenState
     readonly property color colour: Colours.palette.m3tertiary
     readonly property int padding: Config.bar.clock.background ? Tokens.padding.medium : Tokens.padding.extraSmall
     readonly property var font: Tokens.font.body.builders.small.scale(1.1)
@@ -25,6 +26,18 @@ StyledRect {
 
     color: Qt.alpha(Colours.tPalette.m3surfaceContainer, Config.bar.clock.background ? Colours.tPalette.m3surfaceContainer.a : 0)
     radius: Tokens.rounding.full
+
+    StateLayer {
+        radius: Tokens.rounding.full
+        onClicked: {
+            const s = root.screenState;
+            if (!s.dashboard) {
+                s.dashboardTab = 0; // Dashboard tab holds the calendar
+                s.dashboardDate = new Date();
+            }
+            s.dashboard = !s.dashboard;
+        }
+    }
 
     ColumnLayout {
         id: layout

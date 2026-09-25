@@ -17,10 +17,14 @@ inspired by [Ryoku](https://github.com/ryoku-dev/ryoku):
   You can switch each one on or off in Nexus → Utilities.
 - **Bibata Modern Ice cursor** (from `bibata-cursor-theme-bin` in the AUR),
   set in the installer's block in `~/.config/caelestia/hypr-user.lua`.
-
-To switch Hyprland tiling layouts (Dwindle / Master / Scrolling / Monocle),
-install [HyprMod](https://github.com/BlueManCZ/hyprmod) (`paru -S hyprmod`) and
-change its **Layout** setting (it applies live).
+- **Click the bar clock** to open the dashboard on its calendar (scroll to
+  change month); click again to close.
+- **Caps Lock and Num Lock are separate status icons**, so you can hide either
+  one in Nexus → Taskbar → Status icons. If your config still lists the old
+  combined "Lock keys (both)" entry, remove it there and add the ones you want.
+- **[HyprMod](https://github.com/BlueManCZ/hyprmod)** is installed from the AUR.
+  Use it to switch Hyprland tiling layouts (Dwindle / Master / Scrolling /
+  Monocle) under **Layout**; changes apply live.
 
 ## Install (Arch Linux)
 
@@ -73,5 +77,8 @@ to the fuzzel picker.
   - `modules/utilities/cards/Toggles.qml`
   - `plugin/src/Caelestia/Config/utilitiesconfig.hpp`
   - `modules/nexus/pages/panels/UtilitiesPanel.qml`
+  - `modules/bar/{Bar,components/Clock,components/StatusIcons,components/status/LockStatus}.qml`
+  - `modules/nexus/pages/panels/taskbar/BarStatusIcons.qml`
+  - `plugin/src/Caelestia/Config/barconfig.hpp`
 
 Upstream releases are merged into `main`.

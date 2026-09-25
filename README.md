@@ -489,7 +489,11 @@ For example, to automatically hide the bar on the monitor named `DP-1`:
         },
         "statusIcons": [
             {
-                "id": "lockStatus",
+                "id": "capsLock",
+                "enabled": true
+            },
+            {
+                "id": "numLock",
                 "enabled": true
             },
             {
@@ -883,7 +887,8 @@ programs.caelestia = {
   };
   settings = {
     bar.statusIcons = [
-      { id = "lockStatus"; enabled = true; }
+      { id = "capsLock"; enabled = true; }
+      { id = "numLock"; enabled = true; }
       { id = "network"; enabled = true; }
       { id = "bluetooth"; enabled = true; }
       { id = "battery"; enabled = false; }

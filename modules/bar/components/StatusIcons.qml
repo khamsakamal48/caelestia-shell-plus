@@ -37,6 +37,10 @@ StyledRect {
     function collapsed(entry: var): bool {
         if (entry.id === "lockStatus")
             return !Hypr.capsLock && !Hypr.numLock;
+        if (entry.id === "capsLock")
+            return !Hypr.capsLock;
+        if (entry.id === "numLock")
+            return !Hypr.numLock;
         return false;
     }
 
@@ -73,6 +77,26 @@ StyledRect {
                         LockStatus {
                             colour: root.colour
                             parentSpacing: root.spacing
+                        }
+                    }
+                }
+                DelegateChoice {
+                    roleValue: "capsLock"
+                    delegate: EntryWrapper {
+                        LockStatus {
+                            colour: root.colour
+                            parentSpacing: root.spacing
+                            num: false
+                        }
+                    }
+                }
+                DelegateChoice {
+                    roleValue: "numLock"
+                    delegate: EntryWrapper {
+                        LockStatus {
+                            colour: root.colour
+                            parentSpacing: root.spacing
+                            caps: false
                         }
                     }
                 }

@@ -12,6 +12,18 @@
 
 https://github.com/user-attachments/assets/0840f496-575c-4ca6-83a8-87bb01a85c5f
 
+## Installing caelestia-shell-plus (this fork)
+
+On a fresh Arch install, set up Caelestia first, then apply this fork's fixes
+(listed in [PLUS.md](PLUS.md)):
+
+```sh
+git clone https://github.com/khamsakamal48/caelestia-shell-plus ~/src/caelestia-shell-plus
+cd ~/src/caelestia-shell-plus && ./install.sh
+```
+
+To update later: `cd ~/src/caelestia-shell-plus && git pull && ./install.sh`.
+
 ## Components
 
 -   Widgets: [`Quickshell`](https://quickshell.outfoxxed.me)

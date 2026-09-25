@@ -28,6 +28,13 @@ class UtilitiesToasts : public settings::ObjectNode {
     CONFIG_PROPERTY(bool, nowPlaying, false)
 };
 
+class UtilitiesSounds : public settings::ObjectNode {
+    CONFIG_NODE(UtilitiesSounds, settings::ObjectNode)
+
+    CONFIG_PROPERTY(bool, chargingChanged, true)
+    CONFIG_PROPERTY(bool, usbChanged, true)
+};
+
 class UtilitiesVpnProvider : public settings::ObjectNode {
     CONFIG_NODE(UtilitiesVpnProvider, settings::ObjectNode)
 
@@ -63,6 +70,7 @@ class UtilitiesConfig : public settings::ObjectNode {
     CONFIG_PROPERTY(int, maxToasts, 4)
     CONFIG_SUBOBJECT(UtilitiesCards, cards)
     CONFIG_GLOBAL_SUBOBJECT(UtilitiesToasts, toasts)
+    CONFIG_GLOBAL_SUBOBJECT(UtilitiesSounds, sounds)
     CONFIG_GLOBAL_SUBOBJECT(UtilitiesVpn, vpn)
     CONFIG_LIST(EntryList, quickToggles,
         DEFAULT_ARG({

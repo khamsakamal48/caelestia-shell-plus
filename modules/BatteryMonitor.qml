@@ -42,6 +42,9 @@ Scope {
             if (!UPower.displayDevice.ready)
                 return;
 
+            if (GlobalConfig.utilities.sounds.chargingChanged)
+                Quickshell.execDetached(["pw-play", `/usr/share/sounds/freedesktop/stereo/power-${UPower.onBattery ? "unplug" : "plug"}.oga`]);
+
             if (UPower.onBattery) {
                 if (GlobalConfig.utilities.toasts.chargingChanged)
                     Toaster.toast(Tr.tr("Charger unplugged"), Tr.tr("Battery is discharging"), "power_off");

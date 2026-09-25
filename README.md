@@ -812,6 +812,10 @@ For example, to automatically hide the bar on the monitor named `DP-1`:
             "vpnChanged": true,
             "nowPlaying": false
         },
+        "sounds": {
+            "chargingChanged": true,
+            "usbChanged": true
+        },
         "vpn": {
             "enabled": false,
             "provider": [

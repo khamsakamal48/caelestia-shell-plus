@@ -57,6 +57,10 @@ depends=(
     # caelestia-shell-plus: clipboard outlives its app, localised Pictures folder
     'wl-clip-persist'
     'xdg-user-dirs'
+
+    # caelestia-shell-plus: charger and USB sounds (pw-play, freedesktop sounds)
+    'pipewire'
+    'sound-theme-freedesktop'
 )
 optdepends=(
     'asdbctl: controlling the brightness of Apple Studio Displays'

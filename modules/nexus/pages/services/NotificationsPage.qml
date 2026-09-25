@@ -188,5 +188,24 @@ PageBase {
             checked: GlobalConfig.utilities.toasts.nowPlaying
             onToggled: GlobalConfig.utilities.toasts.nowPlaying = checked
         }
+
+        // Event sounds
+        SectionHeader {
+            text: Tr.tr("Sounds")
+        }
+
+        ToggleRow {
+            first: true
+            text: Tr.tr("Charger plugged or unplugged")
+            checked: GlobalConfig.utilities.sounds.chargingChanged
+            onToggled: GlobalConfig.utilities.sounds.chargingChanged = checked
+        }
+
+        ToggleRow {
+            last: true
+            text: Tr.tr("USB device connected or removed")
+            checked: GlobalConfig.utilities.sounds.usbChanged
+            onToggled: GlobalConfig.utilities.sounds.usbChanged = checked
+        }
     }
 }

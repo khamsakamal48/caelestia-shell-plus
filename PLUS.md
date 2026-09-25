@@ -74,6 +74,9 @@ inspired by [Ryoku](https://github.com/ryoku-dev/ryoku):
   login. If another display manager (SDDM, GDM...) is enabled, the installer
   leaves it alone. Your keyring isn't unlocked at login, since no password is
   typed at that point.
+- **Sounds when you plug things in**, as on Ryoku. Plugging in or unplugging
+  the charger, or connecting or removing a USB device, plays the matching
+  freedesktop sound. Turn either off in Nexus → Notifications → Sounds.
 
 ## Install (Arch Linux)
 
@@ -119,6 +122,7 @@ to the fuzzel picker.
   - `modules/clipboard/`: the clipboard panel
   - `services/Clipboard.qml` (cliphist) and `services/NightLight.qml` (hyprsunset)
   - `packaging/caelestia-backlight` (+ `test-caelestia-backlight.sh`)
+  - `modules/UsbMonitor.qml`: USB connect/remove sounds
   - `packaging/`, `install.sh`, this file
 - **Small edits to upstream files:**
   - `components/ScreenState.qml`
@@ -135,5 +139,6 @@ to the fuzzel picker.
   - `modules/bar/components/OsIcon.qml`, `modules/nexus/pages/panels/TaskbarPanel.qml`
   - `modules/bar/components/Tray.qml`, `modules/nexus/pages/panels/taskbar/BarTray.qml`
   - `plugin/src/Caelestia/Services/hyprdevices.cpp`
+  - `shell.qml`, `modules/BatteryMonitor.qml`, `modules/nexus/pages/services/NotificationsPage.qml`
 
 Upstream releases are merged into `main`.

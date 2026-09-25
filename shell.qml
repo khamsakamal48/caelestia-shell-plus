@@ -36,6 +36,7 @@ ShellRoot {
 
     Shortcuts {}
     BatteryMonitor {}
+    UsbMonitor {}
     IdleMonitors {
         lock: lock
     }

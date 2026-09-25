@@ -123,6 +123,9 @@ hl.on("monitor.removed", settle_monitors)
 -- a hotplug or screen capture (Ryoku sets the same). Breaks nvidia, so not there.
 local nv = io.open("/proc/driver/nvidia/version")
 if nv then nv:close() else hl.env("AQ_NO_MODIFIERS", "1") end
+-- The dots start with Num Lock off, so a PIN typed on the number pad at the
+-- boot lock screen came through as arrow keys.
+hl.config({ input = { numlock_by_default = true } })
 -- Keep a copy alive after the app it came from closes (Ryoku runs the same).
 hl.on("hyprland.start", function() hl.exec_cmd("pgrep -x wl-clip-persist || wl-clip-persist --clipboard regular") end)
 -- The session never exports this, so a localised Pictures folder (~/Bilder...)

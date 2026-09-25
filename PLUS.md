@@ -30,6 +30,14 @@ inspired by [Ryoku](https://github.com/ryoku-dev/ryoku):
   default is 5s). For 15s after waking, the shell keeps turning the displays
   back on, so closing the lid with idle timeouts off no longer wakes to a
   black screen.
+- **A stuck fingerprint reader no longer locks you out of it.** After a
+  suspend, fprintd sometimes rejects every scan instantly. The lock screen used
+  to burn through all your fingerprint tries in a second and turn fingerprint
+  off until the next lock. Now those instant failures don't count: after three
+  it says "Fingerprint unavailable. Please use password." and quietly retries
+  the reader every 2s, 4s, 8s... (up to a minute) until it answers.
+- **Num Lock is on from login**, so the number pad types digits at the boot
+  lock screen (the dots turn it off). Toggle it with the Num Lock key as usual.
 - **Brightness on hybrid laptops.** On Intel + NVIDIA laptops, the slider and
   brightness keys now control the real panel instead of a phantom device
   (`caelestia-backlight` picks the one wired to the connected built-in screen).
@@ -116,6 +124,7 @@ to the fuzzel picker.
   - `modules/nexus/pages/panels/taskbar/BarStatusIcons.qml`
   - `plugin/src/Caelestia/Config/barconfig.hpp`
   - `modules/IdleMonitors.qml`, `services/Brightness.qml`
+  - `modules/lock/{Pam,center/StateMessage,center/PasswordInput}.qml`
   - `modules/bar/components/OsIcon.qml`, `modules/nexus/pages/panels/TaskbarPanel.qml`
   - `plugin/src/Caelestia/Services/hyprdevices.cpp`
 

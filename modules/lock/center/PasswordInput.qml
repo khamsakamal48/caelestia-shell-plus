@@ -77,7 +77,7 @@ StyledRect {
                     text: {
                         if (inputField.showPassword)
                             return "visibility";
-                        if (root.lock.pam.fprint.tries >= GlobalConfig.lock.maxFprintTries) {
+                        if (root.lock.pam.fprint.stuck || root.lock.pam.fprint.tries >= GlobalConfig.lock.maxFprintTries) {
                             if (root.lock.pam.howdy.canAttempt)
                                 return "face";
                             return "fingerprint_off";

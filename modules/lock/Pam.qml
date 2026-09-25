@@ -128,6 +128,7 @@ Scope {
         config: "fprint"
         availCommand: ["sh", "-c", "fprintd-list $USER"]
         retryOnFail: true
+        watchStuck: true
         enabled: GlobalConfig.lock.enableFprint
         maxTries: GlobalConfig.lock.maxFprintTries
         onAvailProcExited: root.restartFprint()
@@ -194,6 +195,14 @@ Scope {
         property alias config: pam.config
         property alias availCommand: availProc.command
         property bool retryOnFail
+        // A real scan takes seconds. A result within a second is the device
+        // refusing the claim (fprintd after suspend often does), so it neither
+        // counts as a try nor flashes: three in a row park the sensor as
+        // "stuck" and re-probe it on a doubling backoff until it answers.
+        property bool watchStuck
+        property bool stuck
+        property int instantFails
+        property real startedAt
 
         property bool available
         property int tries
@@ -211,6 +220,7 @@ Scope {
         }
 
         function start(): void {
+            startedAt = Date.now();
             pam.start();
         }
 
@@ -222,6 +232,9 @@ Scope {
             tries = 0;
             errorTries = 0;
             state = Pam.None;
+            stuck = false;
+            instantFails = 0;
+            stuckRetry.interval = 1000;
         }
 
         PamContext {
@@ -235,6 +248,18 @@ Scope {
 
                 if (res === PamResult.Success)
                     return root.lock.unlock();
+
+                if (ctx.watchStuck && Date.now() - ctx.startedAt < 1000) {
+                    if (++ctx.instantFails >= 3) {
+                        ctx.stuck = true;
+                        stuckRetry.interval = Math.min(stuckRetry.interval * 2, 60000);
+                    }
+                    stuckRetry.restart();
+                    return;
+                }
+                ctx.instantFails = 0;
+                ctx.stuck = false;
+                stuckRetry.interval = 1000;
 
                 root.clearTransientState();
 
@@ -250,7 +275,7 @@ Scope {
                     if (ctx.tries < ctx.maxTries) {
                         ctx.state = Pam.Failed;
                         if (ctx.retryOnFail)
-                            start();
+                            ctx.start();
                     } else {
                         ctx.state = Pam.MaxTries;
                         abort();
@@ -263,10 +288,17 @@ Scope {
         }
 
         Timer {
+            id: stuckRetry
+
+            interval: 1000
+            onTriggered: if (ctx.canAttempt && !ctx.active) ctx.start()
+        }
+
+        Timer {
             id: errorRetry
 
             interval: 800
-            onTriggered: pam.start()
+            onTriggered: ctx.start()
         }
 
         Timer {

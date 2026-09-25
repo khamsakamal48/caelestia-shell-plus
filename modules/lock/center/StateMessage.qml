@@ -14,6 +14,8 @@ Item {
 
     readonly property string msg: {
         // Errors
+        if (pam.fprint.stuck)
+            return Tr.tr("Fingerprint unavailable. Please use password.");
         if (pam.fprint.state === Pam.Error)
             return Tr.tr("FP ERROR: %1").arg(pam.fprint.message);
         if (pam.howdy.state === Pam.Error)

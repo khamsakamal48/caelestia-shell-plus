@@ -104,6 +104,13 @@ Item {
                     font: Tokens.font.body.small
                     color: Colours.palette.m3onSurfaceVariant
                 }
+
+                IconButton {
+                    type: IconButton.Text
+                    icon: "refresh"
+                    disabled: fetcher.running
+                    onClicked: fetcher.running = true
+                }
             }
 
             StyledText {
